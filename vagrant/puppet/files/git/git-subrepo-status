@@ -1,34 +1,26 @@
 #!/bin/bash
 
-echo "Finding sub-folder git repositories..."
+LISTUTIL=$(which git-subrepo-list 2>/dev/null)
 
-repos=($(find ./* -name ".git" | cut -c 3-))
-n_repos=${#repos[@]}
-
-if [ $n_repos = 0 ]
+if [ -z "$LISTUTIL" ]
 then
-  echo "No repositories were found."
-else
-  echo -e "Checking status of ${n_repos} repositories...\n"
-  changed=0
+  echo "error: couldn't find git-subrepo-list utility in $PATH"
+  exit
+fi
 
-  for i in "${repos[@]}"
+REPOS=($($LISTUTIL))
+
+if [ ${#REPOS[@]} != 0 ]
+then
+  for REPO in ${REPOS[@]}
   do
-    cd "$i/.."
+    cd $REPO
 
     if ! [[ $(git status) =~ .*nothing\ to\ commit.* ]]
     then
-      let "changed += 1"
-      echo "Changed: ${PWD}"
+      echo "$REPO (changed)"
     fi
 
     cd - > /dev/null
   done
-
-  if [ $changed != 0 ]
-  then
-    echo -e "\n$changed repositories have changed."
-  else
-    echo "Nothing changed."
-  fi
 fi

@@ -70,6 +70,13 @@ node default {
   #
   # Put useful shell scripts in /usr/local/bin.
   #
+  file { '/usr/local/bin/git-subrepo-list':
+    source => '/vagrant/puppet/files/git/git-subrepo-list',
+    owner => 'root',
+    group => 'root',
+    mode => '0755'
+  }
+
   file { '/usr/local/bin/git-subrepo-status':
     source => '/vagrant/puppet/files/git/git-subrepo-status',
     owner => 'root',

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+REPOS=($(find ./* -name ".git" | rev | cut -c6- | rev))
+
+if [ ${#REPOS[@]} != 0 ]
+then
+  printf "%s\n" ${REPOS[@]}
+fi
